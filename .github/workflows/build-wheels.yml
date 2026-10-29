@@ -1,0 +1,38 @@
+name: Build Wheel and Dependencies
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Install Build Tools
+      run: |
+        python -m pip install --upgrade pip
+        python -m pip install build
+
+    - name: Build Project Wheel
+      run: |
+        # Builds your project's wheel file into the ./dist folder
+        python -m build --wheel --outdir dist/
+
+    - name: Collect All Dependency Wheels
+      run: |
+        # Download/Build all external dependency wheels into the same dist folder
+        # This scans your project (via pyproject.toml / setup.py) or a requirements file
+        python -m pip wheel . --wheel-dir=dist/
+
+    - name: Upload Wheels Archive
+      uses: actions/upload-artifact@v4
+      with:
+        name: python-wheels-bundle
+        path: dist/
