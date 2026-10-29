@@ -32,7 +32,7 @@ jobs:
         python -m pip wheel . --wheel-dir=dist/
 
     - name: Upload Wheels Archive
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v8.0.2
       with:
         name: python-wheels-bundle
         path: dist/
